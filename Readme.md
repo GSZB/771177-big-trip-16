@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Szabolcs Gönczy](https://up.htmlacademy.ru/ecmascript/16/user/771177).
-* Наставник: `Неизвестно`.
+* Наставник: [Светлана Березюк](https://htmlacademy.ru/profile/id1432187).
 
 ---
 
