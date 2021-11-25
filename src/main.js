@@ -26,7 +26,7 @@ renderTemplate(siteMainSort, createSiteModifyTemplate(), RenderPosition.BEFOREEN
 renderTemplate(siteMainSort, createSiteCreateTemplate(), RenderPosition.BEFOREEND);
 
 
-const createTripList = (() => {
+(() => {
 
   const pointFragment = document.createDocumentFragment();
   const createSitePointWrapper = document.createElement('ul');
