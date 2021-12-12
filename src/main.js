@@ -26,16 +26,14 @@ renderTemplate(siteMainSort, createSiteModifyTemplate(), RenderPosition.BEFOREEN
 renderTemplate(siteMainSort, createSiteCreateTemplate(), RenderPosition.BEFOREEND);
 
 
-(() => {
+const pointFragment = document.createDocumentFragment();
+const createSitePointWrapper = document.createElement('ul');
+createSitePointWrapper.classList.add('trip-events__list');
+pointFragment.appendChild(createSitePointWrapper);
+siteMainSort.appendChild(pointFragment);
 
-  const pointFragment = document.createDocumentFragment();
-  const createSitePointWrapper = document.createElement('ul');
-  createSitePointWrapper.classList.add('trip-events__list');
-  pointFragment.appendChild(createSitePointWrapper);
-  siteMainSort.appendChild(pointFragment);
+for (let i = 0; i < TASK_COUNT; i++) {
+  renderTemplate(createSitePointWrapper, createSitePointTemplate(), RenderPosition.BEFOREEND);
+}
 
-  for (let i = 0; i < TASK_COUNT; i++) {
-    renderTemplate(createSitePointWrapper, createSitePointTemplate(), RenderPosition.BEFOREEND);
-  }
 
-})();
