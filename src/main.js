@@ -5,7 +5,18 @@ import { createSiteModifyTemplate } from './view/site-modify-view.js';
 import { createSiteCreateTemplate } from './view/site-create-view.js';
 import { createSitePointTemplate } from './view/site-point-template.js';
 import { renderTemplate, RenderPosition } from './render.js';
-const TASK_COUNT = 3;
+import { getTypeOfTheTrip, getRandomCity, getOffers, getDestinationInfo, dueTime } from './mock/utils.js';
+import { DESTINATION_COUNT } from './mock/data.js';
+
+const createMockData = () => ({
+  type: getTypeOfTheTrip(),
+  city: getRandomCity(),
+  offers: getOffers(),
+  info: getDestinationInfo(),
+  time: dueTime,
+});
+
+const getDestinationData = () => Array.from({length: DESTINATION_COUNT}, createMockData);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteHeaderMenu = siteHeaderElement.querySelector('.trip-controls__navigation');
@@ -26,16 +37,21 @@ renderTemplate(siteMainSort, createSiteModifyTemplate(), RenderPosition.BEFOREEN
 renderTemplate(siteMainSort, createSiteCreateTemplate(), RenderPosition.BEFOREEND);
 
 
-(() => {
+const generatePage = () => {
+  const TASK_COUNT = 3;
 
   const pointFragment = document.createDocumentFragment();
-  const createSitePointWrapper = document.createElement('ul');
-  createSitePointWrapper.classList.add('trip-events__list');
-  pointFragment.appendChild(createSitePointWrapper);
+  const createSiteWaypointWrapper = document.createElement('ul');
+  createSiteWaypointWrapper.classList.add('trip-events__list');
+  pointFragment.appendChild(createSiteWaypointWrapper);
   siteMainSort.appendChild(pointFragment);
 
   for (let i = 0; i < TASK_COUNT; i++) {
-    renderTemplate(createSitePointWrapper, createSitePointTemplate(), RenderPosition.BEFOREEND);
+    renderTemplate(createSiteWaypointWrapper, createSitePointTemplate(getDestinationData[i]), RenderPosition.BEFOREEND);
   }
 
-})();
+};
+
+generatePage();
+
+export {createMockData};
