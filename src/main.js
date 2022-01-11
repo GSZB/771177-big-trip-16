@@ -18,6 +18,8 @@ const createMockData = () => ({
 
 const getDestinationData = () => Array.from({length: DESTINATION_COUNT}, createMockData);
 
+const destinationData = getDestinationData();
+
 const siteHeaderElement = document.querySelector('.page-header');
 const siteHeaderMenu = siteHeaderElement.querySelector('.trip-controls__navigation');
 
@@ -32,13 +34,12 @@ const siteMainSort = siteMainElement.querySelector('.trip-events');
 
 renderTemplate(siteMainSort, createSiteSortTemplate(), RenderPosition.BEFOREEND);
 
-renderTemplate(siteMainSort, createSiteModifyTemplate(), RenderPosition.BEFOREEND);
+renderTemplate(siteMainSort, createSiteModifyTemplate(destinationData[1]), RenderPosition.BEFOREEND);
 
-renderTemplate(siteMainSort, createSiteCreateTemplate(), RenderPosition.BEFOREEND);
-
+renderTemplate(siteMainSort, createSiteCreateTemplate(destinationData[2]), RenderPosition.BEFOREEND);
 
 const generatePage = () => {
-  const TASK_COUNT = 3;
+  // const TASK_COUNT = 3;
 
   const pointFragment = document.createDocumentFragment();
   const createSiteWaypointWrapper = document.createElement('ul');
@@ -46,11 +47,12 @@ const generatePage = () => {
   pointFragment.appendChild(createSiteWaypointWrapper);
   siteMainSort.appendChild(pointFragment);
 
-  for (let i = 0; i < TASK_COUNT; i++) {
-    renderTemplate(createSiteWaypointWrapper, createSitePointTemplate(getDestinationData[i]), RenderPosition.BEFOREEND);
+  for (let i = 0; i < DESTINATION_COUNT; i++) {
+    renderTemplate(createSiteWaypointWrapper, createSitePointTemplate(destinationData[i]), RenderPosition.BEFOREEND);
   }
 
 };
+
 
 generatePage();
 

@@ -8,7 +8,7 @@ const CITIES = ['Amsterdam', 'Rio de Janeiro', 'Tokyo'];
 const FLYGHT_OFFERS = ['Add luggage +€  50', 'Switch to comfort +€  80'];
 const SIGHTSEEING_OFFER = ['Book tickets +€  40', 'Lunch in city +€  30'];
 const getFlygthOffer = () => [...new Set(Array.from({length: Math.floor(Math.random() * (FLYGHT_OFFERS.length + 1))}, () => getRandomArrayElement(FLYGHT_OFFERS)))];
-const getSightseeingOffer = () => [...new Set(Array.from({length: Math.floor(Math.random() * (SIGHTSEEING_OFFER.length + 1))}, () => getRandomArrayElement(SIGHTSEEING_OFFER)))]
+const getSightseeingOffer = () => [...new Set(Array.from({length: Math.floor(Math.random() * (SIGHTSEEING_OFFER.length + 1))}, () => getRandomArrayElement(SIGHTSEEING_OFFER)))];
 
 const OFFERS = {
   Taxi: 'Order Uber +€  20', //Можно формировать цену в зависимости от того, какой город выбран

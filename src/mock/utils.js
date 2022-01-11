@@ -1,3 +1,4 @@
+
 import { DESTINATION_INFO, MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL, TYPE_OF_TRIP, CITIES, OFFERS, MAXIMUM_RANDOM_BIG } from './data.js';
 
 // Функция, возвращающая случайное целое число из переданного диапазона включительно
