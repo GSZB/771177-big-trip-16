@@ -5,15 +5,19 @@ import { createSiteModifyTemplate } from './view/site-modify-view.js';
 import { createSiteCreateTemplate } from './view/site-create-view.js';
 import { createSitePointTemplate } from './view/site-point-template.js';
 import { renderTemplate, RenderPosition } from './render.js';
-import { getTypeOfTheTrip, getRandomCity, getOffers, getDestinationInfo, dueTime } from './mock/utils.js';
-import { DESTINATION_COUNT } from './mock/data.js';
+import { getTypeOfTheTrip, getOffers, getDestinationInfo, generatePrice, generateDate, getRandomInt } from './mock/utils.js';
+import { DESTINATION_COUNT, MAXIMUM_RANDOM_SMALL, MINIMAL_RANDOM_NUMBER } from './mock/data.js';
+
 
 const createMockData = () => ({
+  basePrice: generatePrice(),
+  dateFrom: generateDate(),
+  dateTo: generateDate(),
+  destination: getDestinationInfo(),
+  id: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL),
+  isFavorite: Boolean(getRandomInt(0, 1)),
   type: getTypeOfTheTrip(),
-  city: getRandomCity(),
   offers: getOffers(),
-  info: getDestinationInfo(),
-  time: dueTime,
 });
 
 const getDestinationData = () => Array.from({length: DESTINATION_COUNT}, createMockData);
@@ -34,12 +38,11 @@ const siteMainSort = siteMainElement.querySelector('.trip-events');
 
 renderTemplate(siteMainSort, createSiteSortTemplate(), RenderPosition.BEFOREEND);
 
-renderTemplate(siteMainSort, createSiteModifyTemplate(destinationData[1]), RenderPosition.BEFOREEND);
+renderTemplate(siteMainSort, createSiteModifyTemplate(destinationData[0]), RenderPosition.BEFOREEND);
 
-renderTemplate(siteMainSort, createSiteCreateTemplate(destinationData[2]), RenderPosition.BEFOREEND);
+renderTemplate(siteMainSort, createSiteCreateTemplate(destinationData[1]), RenderPosition.BEFOREEND);
 
 const generatePage = () => {
-  // const TASK_COUNT = 3;
 
   const pointFragment = document.createDocumentFragment();
   const createSiteWaypointWrapper = document.createElement('ul');

@@ -1,5 +1,5 @@
 export const createSiteModifyTemplate = (task) => {
-  const {info} = task;
+  const {destination} = task;
 
   return `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -150,7 +150,7 @@ export const createSiteModifyTemplate = (task) => {
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${info.description}</p>
+      <p class="event__destination-description">${destination.text}</p>
     </section>
   </section>
 </form>`;
