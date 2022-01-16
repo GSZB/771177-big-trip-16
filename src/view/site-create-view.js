@@ -1,4 +1,6 @@
-export const createSiteCreateTemplate = (task) => {
+import {createElement} from './../render.js';
+
+const createSiteCreateTemplate = (task) => {
   const {destination} = task;
   return  `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -161,3 +163,28 @@ export const createSiteCreateTemplate = (task) => {
   </section>
 </form>`;
 };
+
+export default class SiteCreateTemplate {
+  #element = null;
+  #task = null;
+
+  constructor(task) {
+    this.#task = task;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSiteCreateTemplate(this.#task);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

@@ -1,4 +1,6 @@
-export const createSitePointTemplate = (task) => {
+import {createElement} from './../render.js';
+
+const createSitePointTemplate = (task) => {
   const {type, destination, offers} = task;
 
   return `<li class="trip-events__item">
@@ -39,3 +41,29 @@ export const createSitePointTemplate = (task) => {
   </div>
 </li>`;
 };
+
+
+export default class SitePointTemplate {
+  #element = null;
+  #task = null;
+
+  constructor(task) {
+    this.#task = task;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSitePointTemplate(this.#task);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

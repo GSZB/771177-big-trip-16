@@ -1,7 +1,9 @@
-export const createSiteModifyTemplate = (task) => {
+import {createElement} from './../render.js';
+
+const createSiteModifyTemplate = (task) => {
   const {destination} = task;
 
-  return `<form class="event event--edit" action="#" method="post">
+  return `<li><form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -153,6 +155,30 @@ export const createSiteModifyTemplate = (task) => {
       <p class="event__destination-description">${destination.text}</p>
     </section>
   </section>
-</form>`;
+</form></li>`;
 };
 
+export default class SiteModifyTemplate {
+  #element = null;
+  #task = null;
+
+  constructor(task) {
+    this.#task = task;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSiteModifyTemplate(this.#task);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

@@ -1,10 +1,9 @@
-import { createSiteMenuTemplate } from './view/site-menu-view.js';
-import { createSiteFilterTemplate } from './view/site-filter-view.js';
-import { createSiteSortTemplate } from './view/site-sort-view.js';
-import { createSiteModifyTemplate } from './view/site-modify-view.js';
-import { createSiteCreateTemplate } from './view/site-create-view.js';
-import { createSitePointTemplate } from './view/site-point-template.js';
-import { renderTemplate, RenderPosition } from './render.js';
+import SiteMenuView  from './view/site-menu-view.js';
+import SiteFilterView from './view/site-filter-view.js';
+import SiteSortView from './view/site-sort-view.js';
+import SiteModifyTemplate from './view/site-modify-view.js';
+import SitePointTemplate from './view/site-point-template.js';
+import { render, RenderPosition } from './render.js';
 import { getTypeOfTheTrip, getOffers, getDestinationInfo, generatePrice, generateDate, getRandomInt } from './mock/utils.js';
 import { DESTINATION_COUNT, MAXIMUM_RANDOM_SMALL, MINIMAL_RANDOM_NUMBER } from './mock/data.js';
 
@@ -27,20 +26,16 @@ const destinationData = getDestinationData();
 const siteHeaderElement = document.querySelector('.page-header');
 const siteHeaderMenu = siteHeaderElement.querySelector('.trip-controls__navigation');
 
-renderTemplate(siteHeaderMenu, createSiteMenuTemplate(), RenderPosition.BEFOREEND);
+render(siteHeaderMenu, new SiteMenuView().element, RenderPosition.BEFOREEND);
 
 const siteHeaderFilter = siteHeaderElement.querySelector('.trip-controls__filters');
 
-renderTemplate(siteHeaderFilter, createSiteFilterTemplate(), RenderPosition.BEFOREEND);
+render(siteHeaderFilter, new SiteFilterView().element, RenderPosition.BEFOREEND);
 
 const siteMainElement = document.querySelector('.page-main');
 const siteMainSort = siteMainElement.querySelector('.trip-events');
 
-renderTemplate(siteMainSort, createSiteSortTemplate(), RenderPosition.BEFOREEND);
-
-renderTemplate(siteMainSort, createSiteModifyTemplate(destinationData[0]), RenderPosition.BEFOREEND);
-
-renderTemplate(siteMainSort, createSiteCreateTemplate(destinationData[1]), RenderPosition.BEFOREEND);
+render(siteMainSort, new SiteSortView().element, RenderPosition.BEFOREEND);
 
 const generatePage = () => {
 
@@ -51,11 +46,40 @@ const generatePage = () => {
   siteMainSort.appendChild(pointFragment);
 
   for (let i = 0; i < DESTINATION_COUNT; i++) {
-    renderTemplate(createSiteWaypointWrapper, createSitePointTemplate(destinationData[i]), RenderPosition.BEFOREEND);
+    const modifyPiontComponent = new SiteModifyTemplate(destinationData[i]);
+    const pointComponent = new SitePointTemplate(destinationData[i]);
+    let isOpen = false;
+
+    const replacePointToForm = () => {
+      createSiteWaypointWrapper.replaceChild(modifyPiontComponent.element, pointComponent.element);
+    };
+
+    const replaceFormToPoint = () => {
+      createSiteWaypointWrapper.replaceChild(pointComponent.element, modifyPiontComponent.element);
+    };
+
+    const toggle = () => {
+      if (isOpen) {
+        replaceFormToPoint();
+      } else {
+        replacePointToForm();
+      }
+
+      isOpen = !isOpen;
+    };
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      toggle();
+    });
+
+    modifyPiontComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      toggle();
+    });
+
+    render(createSiteWaypointWrapper, pointComponent.element, RenderPosition.BEFOREEND);
   }
 
 };
-
 
 generatePage();
 
