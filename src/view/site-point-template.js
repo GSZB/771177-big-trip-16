@@ -1,12 +1,7 @@
-export const createSitePointTemplate = (task) => {
-  const {type, city, offers} = task;
-  // const isFavorite = Boolean(getRandomInteger(0, 1)),
-  // const starButton = document.querySelector('.event__favorite-btn');
-  // if (isFavorite) {
-  //   starButton.classList.remove('event__favorite-btn--active');
-  // }
+import {createElement} from './../render.js';
 
-  // console.log(starButton);
+const createSitePointTemplate = (task) => {
+  const {type, destination, offers} = task;
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -14,7 +9,7 @@ export const createSitePointTemplate = (task) => {
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
     </div>
-    <h3 class="event__title">${type} ${city}</h3>
+    <h3 class="event__title">${type} ${destination.name}</h3>
     <div class="event__schedule">
       <p class="event__time">
         <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
@@ -24,12 +19,12 @@ export const createSitePointTemplate = (task) => {
       <p class="event__duration">30M</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">20</span>
+      &euro;&nbsp;<span class="event__price-value">${offers[0].price}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${offers}</span>
+        <span class="event__offer-title">${`${offers[0].title  }&nbsp;&plus;&euro;&nbsp;${  offers[0].price}`}</span>
         <!-- &plus;&euro;&nbsp;
         <span class="event__offer-price">20</span>-->
       </li>
@@ -46,3 +41,29 @@ export const createSitePointTemplate = (task) => {
   </div>
 </li>`;
 };
+
+
+export default class SitePointTemplate {
+  #element = null;
+  #task = null;
+
+  constructor(task) {
+    this.#task = task;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSitePointTemplate(this.#task);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

@@ -1,5 +1,7 @@
-export const createSiteCreateTemplate = (task) => {
-  const {info} = task;
+import {createElement} from './../render.js';
+
+const createSiteCreateTemplate = (task) => {
+  const {destination} = task;
   return  `<form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
@@ -146,18 +148,43 @@ export const createSiteCreateTemplate = (task) => {
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${info.description}</p>
+      <p class="event__destination-description">${destination.text}</p>
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          <img class="event__photo" src="${info.photos}" alt="Event photo">
-          <img class="event__photo" src="${info.photos}" alt="Event photo">
-          <img class="event__photo" src="${info.photos}" alt="Event photo">
-          <img class="event__photo" src="${info.photos}" alt="Event photo">
-          <img class="event__photo" src="${info.photos}" alt="Event photo">
+          <img class="event__photo" src="${destination.pictures[0].photoLink}" alt="Event photo">
+          <img class="event__photo" src="${destination.pictures[0].photoLink}" alt="Event photo">
+          <img class="event__photo" src="${destination.pictures[0].photoLink}" alt="Event photo">
+          <img class="event__photo" src="${destination.pictures[0].photoLink}" alt="Event photo">
+          <img class="event__photo" src="${destination.pictures[0].photoLink}" alt="Event photo">
         </div>
       </div>
     </section>
   </section>
 </form>`;
 };
+
+export default class SiteCreateTemplate {
+  #element = null;
+  #task = null;
+
+  constructor(task) {
+    this.#task = task;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createSiteCreateTemplate(this.#task);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
