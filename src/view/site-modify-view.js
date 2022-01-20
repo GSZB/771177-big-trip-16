@@ -1,6 +1,6 @@
-import {createElement} from './../render.js';
+import {AbstractView} from './abstract-view';
 
-const createSiteModifyTemplate = (task) => {
+const createSiteeditTemplate = (task) => {
   const {destination} = task;
 
   return `<li><form class="event event--edit" action="#" method="post">
@@ -158,27 +158,35 @@ const createSiteModifyTemplate = (task) => {
 </form></li>`;
 };
 
-export default class SiteModifyTemplate {
-  #element = null;
+export default class SiteeditTemplate extends AbstractView {
   #task = null;
 
   constructor(task) {
+    super();
     this.#task = task;
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
   get template() {
-    return createSiteModifyTemplate(this.#task);
+    return createSiteeditTemplate(this.#task);
   }
 
-  removeElement() {
-    this.#element = null;
+  setEditSubmitHandler = (callback) => {
+    this._callback.editSubmit = callback;
+    this.element.addEventListener('submit', this.#editSubmitHandler);
+  }
+
+  #editSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editSubmit();
+  }
+
+  setEventRollupButton = (callback) => {
+    this._callback.rollupClick = callback;
+    this.element.addEventListener('click', this.#eventRollupButton);
+  }
+
+  #eventRollupButton = (evt) => {
+    evt.preventDefault();
+    this._callback.rollupClick();
   }
 }
