@@ -3,6 +3,7 @@ import SiteFilterView from './view/site-filter-view.js';
 import SiteSortView from './view/site-sort-view.js';
 import SiteModifyTemplate from './view/site-modify-view.js';
 import SitePointTemplate from './view/site-point-template.js';
+import SiteCreateTemplate from './view/site-create-view.js';
 import { render, RenderPosition } from './render.js';
 import { getTypeOfTheTrip, getOffers, getDestinationInfo, generatePrice, generateDate, getRandomInt } from './mock/utils.js';
 import { DESTINATION_COUNT, MAXIMUM_RANDOM_SMALL, MINIMAL_RANDOM_NUMBER } from './mock/data.js';
@@ -37,6 +38,7 @@ const siteMainSort = siteMainElement.querySelector('.trip-events');
 
 render(siteMainSort, new SiteSortView().element, RenderPosition.BEFOREEND);
 
+
 const generatePage = () => {
 
   const pointFragment = document.createDocumentFragment();
@@ -68,19 +70,40 @@ const generatePage = () => {
       isOpen = !isOpen;
     };
 
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        toggle();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    modifyPiontComponent.element.querySelector('.event--edit').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      toggle();
+    });
+
     pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       toggle();
+      document.addEventListener('keydown', onEscKeyDown);
     });
 
     modifyPiontComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       toggle();
     });
 
+
     render(createSiteWaypointWrapper, pointComponent.element, RenderPosition.BEFOREEND);
   }
+
+  siteHeaderElement.querySelector('.trip-main__event-add-btn').addEventListener('click', () => {
+    createSiteWaypointWrapper.innerHTML = '';
+    render(createSiteWaypointWrapper, new SiteCreateTemplate(destinationData[0]).element, RenderPosition.BEFOREEND);
+  });
 
 };
 
 generatePage();
+
 
 export {createMockData};
