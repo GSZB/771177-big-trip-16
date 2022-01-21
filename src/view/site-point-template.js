@@ -1,4 +1,4 @@
-import {createElement} from './../render.js';
+import {AbstractView} from './abstract-view';
 
 const createSitePointTemplate = (task) => {
   const {type, destination, offers} = task;
@@ -43,27 +43,25 @@ const createSitePointTemplate = (task) => {
 };
 
 
-export default class SitePointTemplate {
-  #element = null;
+export default class SitePointTemplate extends AbstractView {
   #task = null;
 
   constructor(task) {
+    super();
     this.#task = task;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createSitePointTemplate(this.#task);
   }
 
-  removeElement() {
-    this.#element = null;
+  setEventRolldownButton = (callback) => {
+    this._callback.rolldownClick = callback;
+    this.element.addEventListener('click', this.#eventRolldownButton);
+  }
+
+  #eventRolldownButton = (evt) => {
+    evt.preventDefault();
+    this._callback.rolldownClick();
   }
 }

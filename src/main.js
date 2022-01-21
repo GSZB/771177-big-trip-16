@@ -1,7 +1,7 @@
 import SiteMenuView  from './view/site-menu-view.js';
 import SiteFilterView from './view/site-filter-view.js';
 import SiteSortView from './view/site-sort-view.js';
-import SiteModifyTemplate from './view/site-modify-view.js';
+import SiteeditTemplate from './view/site-modify-view.js';
 import SitePointTemplate from './view/site-point-template.js';
 import SiteCreateTemplate from './view/site-create-view.js';
 import { render, RenderPosition } from './render.js';
@@ -48,16 +48,16 @@ const generatePage = () => {
   siteMainSort.appendChild(pointFragment);
 
   for (let i = 0; i < DESTINATION_COUNT; i++) {
-    const modifyPiontComponent = new SiteModifyTemplate(destinationData[i]);
+    const editPiontComponent = new SiteeditTemplate(destinationData[i]);
     const pointComponent = new SitePointTemplate(destinationData[i]);
     let isOpen = false;
 
     const replacePointToForm = () => {
-      createSiteWaypointWrapper.replaceChild(modifyPiontComponent.element, pointComponent.element);
+      createSiteWaypointWrapper.replaceChild(editPiontComponent.element, pointComponent.element);
     };
 
     const replaceFormToPoint = () => {
-      createSiteWaypointWrapper.replaceChild(pointComponent.element, modifyPiontComponent.element);
+      createSiteWaypointWrapper.replaceChild(pointComponent.element, editPiontComponent.element);
     };
 
     const toggle = () => {
@@ -78,17 +78,17 @@ const generatePage = () => {
       }
     };
 
-    modifyPiontComponent.element.querySelector('.event--edit').addEventListener('submit', (evt) => {
+    editPiontComponent.setEditSubmitHandler((evt) => {
       evt.preventDefault();
       toggle();
     });
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEventRolldownButton(() => {
       toggle();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    modifyPiontComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    editPiontComponent.setEventRollupButton(() => {
       toggle();
     });
 

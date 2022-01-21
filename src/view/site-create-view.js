@@ -1,4 +1,4 @@
-import {createElement} from './../render.js';
+import {AbstractView} from './abstract-view';
 
 const createSiteCreateTemplate = (task) => {
   const {destination} = task;
@@ -164,27 +164,15 @@ const createSiteCreateTemplate = (task) => {
 </form>`;
 };
 
-export default class SiteCreateTemplate {
-  #element = null;
+export default class SiteCreateTemplate extends AbstractView {
   #task = null;
 
   constructor(task) {
+    super();
     this.#task = task;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createSiteCreateTemplate(this.#task);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
