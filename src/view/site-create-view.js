@@ -1,4 +1,4 @@
-import {AbstractView} from './abstract-view';
+import AbstractView from './abstract-view';
 
 const createSiteCreateTemplate = (task) => {
   const {destination} = task;
@@ -174,5 +174,15 @@ export default class SiteCreateTemplate extends AbstractView {
 
   get template() {
     return createSiteCreateTemplate(this.#task);
+  }
+
+  setEventCreateButton = (callback) => {
+    this._callback.createClick = callback;
+    this.element.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#eventCreateButton);
+  }
+
+  #eventCreateButton = (evt) => {
+    evt.preventDefault();
+    this._callback.createClick();
   }
 }

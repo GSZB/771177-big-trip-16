@@ -1,4 +1,4 @@
-import {AbstractView} from './abstract-view';
+import AbstractView from './abstract-view';
 
 const createSitePointTemplate = (task) => {
   const {type, destination, offers} = task;
@@ -57,7 +57,7 @@ export default class SitePointTemplate extends AbstractView {
 
   setEventRolldownButton = (callback) => {
     this._callback.rolldownClick = callback;
-    this.element.addEventListener('click', this.#eventRolldownButton);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRolldownButton);
   }
 
   #eventRolldownButton = (evt) => {
