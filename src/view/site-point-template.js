@@ -1,7 +1,11 @@
-import {AbstractView} from './abstract-view';
+import AbstractView from './abstract-view';
 
-const createSitePointTemplate = (task) => {
-  const {type, destination, offers} = task;
+const createSitePointTemplate = (point) => {
+  const {type, destination, offers, isFavorite} = point;
+
+  const favoriteClassName = isFavorite
+    ? 'event__favorite-btn--active'
+    : '';
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -29,7 +33,7 @@ const createSitePointTemplate = (task) => {
         <span class="event__offer-price">20</span>-->
       </li>
     </ul>
-    <button class="event__favorite-btn event__favorite-btn--active" type="button">
+    <button class="event__favorite-btn ${favoriteClassName}" type="button">
       <span class="visually-hidden">Add to favorite</span>
       <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
         <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -44,24 +48,34 @@ const createSitePointTemplate = (task) => {
 
 
 export default class SitePointTemplate extends AbstractView {
-  #task = null;
+  #point = null;
 
-  constructor(task) {
+  constructor(point) {
     super();
-    this.#task = task;
+    this.#point = point;
   }
 
   get template() {
-    return createSitePointTemplate(this.#task);
+    return createSitePointTemplate(this.#point);
   }
 
   setEventRolldownButton = (callback) => {
     this._callback.rolldownClick = callback;
-    this.element.addEventListener('click', this.#eventRolldownButton);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRolldownButton);
   }
 
   #eventRolldownButton = (evt) => {
     evt.preventDefault();
     this._callback.rolldownClick();
+  }
+
+  setEventFavoriteButton = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#eventFavoriteButton);
+  }
+
+  #eventFavoriteButton = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
   }
 }

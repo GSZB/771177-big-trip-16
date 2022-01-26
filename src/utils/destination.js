@@ -1,25 +1,9 @@
 
-import { DESTINATION_INFO, MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL, TYPE_OF_TRIP, CITIES, OFFERS, MAXIMUM_RANDOM_BIG, MAXIMUM_PRICE_NUMBER } from './data.js';
+import { DESTINATION_INFO, MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL, TYPE_OF_TRIP, CITIES, OFFERS, MAXIMUM_RANDOM_BIG, MAXIMUM_PRICE_NUMBER, DESTINATION_COUNT } from '../mock/data.js';
 import dayjs from 'dayjs';
+import { getRandomInt, getRandomArrayElement } from './random.js';
+import { nanoid } from 'nanoid';
 
-// Функция, возвращающая случайное целое число из переданного диапазона включительно
-
-function getRandomInt(min, max) {
-  if (min >= max) {
-
-    throw new ReferenceError('Минимальное значение не может превышать максимальное');
-  }
-
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-//Функция, возвращяющая случайный элемент с массива
-
-function getRandomArrayElement(elements) {
-  return elements[getRandomInt(0, elements.length - 1)];
-}
 
 //Функции возвращающие случайные элементы для склеивания описания
 
@@ -64,4 +48,18 @@ const generateDate = () => {
   return dayjs().add(daysGap, 'day').toDate();
 };
 
-export { getRandomInt, getRandomArrayElement, getTypeOfTheTrip, getRandomCity, getDestinationInfo, getAmountOfGeneratedPhotos, getOffers, generatePrice, generateDate };
+const createMockData = () => ({
+  id: nanoid(),
+  basePrice: generatePrice(),
+  dateFrom: generateDate(),
+  dateTo: generateDate(),
+  destination: getDestinationInfo(),
+  isFavorite: Boolean(getRandomInt(0, 1)),
+  type: getTypeOfTheTrip(),
+  offers: getOffers(),
+});
+
+const getDestinationData = () => Array.from({length: DESTINATION_COUNT}, createMockData);
+const destinationData = getDestinationData();
+
+export { destinationData, getRandomCity, getAmountOfGeneratedPhotos };

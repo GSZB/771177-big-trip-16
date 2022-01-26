@@ -1,6 +1,6 @@
-import {AbstractView} from './abstract-view';
+import AbstractView from './abstract-view';
 
-const createSiteeditTemplate = (task) => {
+const createSiteEditTemplate = (task) => {
   const {destination} = task;
 
   return `<li><form class="event event--edit" action="#" method="post">
@@ -158,7 +158,7 @@ const createSiteeditTemplate = (task) => {
 </form></li>`;
 };
 
-export default class SiteeditTemplate extends AbstractView {
+export default class SiteEditTemplate extends AbstractView {
   #task = null;
 
   constructor(task) {
@@ -167,22 +167,22 @@ export default class SiteeditTemplate extends AbstractView {
   }
 
   get template() {
-    return createSiteeditTemplate(this.#task);
+    return createSiteEditTemplate(this.#task);
   }
 
   setEditSubmitHandler = (callback) => {
     this._callback.editSubmit = callback;
-    this.element.addEventListener('submit', this.#editSubmitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('click', this.#editSubmitHandler);
   }
 
   #editSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editSubmit();
+    this._callback.editSubmit(this.#task);
   }
 
   setEventRollupButton = (callback) => {
     this._callback.rollupClick = callback;
-    this.element.addEventListener('click', this.#eventRollupButton);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRollupButton);
   }
 
   #eventRollupButton = (evt) => {
