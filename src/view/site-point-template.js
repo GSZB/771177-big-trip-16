@@ -1,7 +1,7 @@
 import AbstractView from './abstract-view';
 
-const createSitePointTemplate = (task) => {
-  const {type, destination, offers} = task;
+const createSitePointTemplate = (point) => {
+  const {type, destination, offers} = point;
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -44,15 +44,15 @@ const createSitePointTemplate = (task) => {
 
 
 export default class SitePointTemplate extends AbstractView {
-  #task = null;
+  #point = null;
 
-  constructor(task) {
+  constructor(point) {
     super();
-    this.#task = task;
+    this.#point = point;
   }
 
   get template() {
-    return createSitePointTemplate(this.#task);
+    return createSitePointTemplate(this.#point);
   }
 
   setEventRolldownButton = (callback) => {

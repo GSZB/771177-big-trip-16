@@ -177,7 +177,7 @@ export default class SiteEditTemplate extends AbstractView {
 
   #editSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.editSubmit();
+    this._callback.editSubmit(this.#task);
   }
 
   setEventRollupButton = (callback) => {

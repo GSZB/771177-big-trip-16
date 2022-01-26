@@ -1,7 +1,7 @@
 import SiteFilterView from './../view/site-sort-view';
 import TripListTemplate from './../view/trip-list-view';
 import PointPresenter from './../presenter/point-presenter';
-import { remove, render, RenderPosition, replace } from './../utils/render';
+import { remove, render, RenderPosition, updateItem } from './../utils/render';
 import EmptyListTemplate from './../view/list-empty-view';
 import SiteCreateTemplate from './../view/site-create-view';
 import { destinationData } from './../utils/destination';
@@ -18,6 +18,7 @@ export default class TripPresenter {
   #sitePointListElements = document.querySelector('.trip-events');
 
   #tripPoints = [];
+  #pointPresenter = new Map();
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -38,9 +39,15 @@ export default class TripPresenter {
     this.#renderPoints();
   }
 
+  #handlePointChange = (updatedPoint) => {
+    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  }
+
   #renderPoint = (point) => {
     const pointPresenter = new PointPresenter(this.#tripListComponent);
     pointPresenter.init(point);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #renderPoints = () => {
@@ -49,6 +56,11 @@ export default class TripPresenter {
 
   #renderNoPoints = () => {
     render(this.#tripListComponent, this.#emptyListComponent, RenderPosition.AFTERBEGIN);
+  }
+
+  #clearPoints = () => {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 
   // #renderNewPoint = () => {

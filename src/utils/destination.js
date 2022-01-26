@@ -54,7 +54,6 @@ const createMockData = () => ({
   dateFrom: generateDate(),
   dateTo: generateDate(),
   destination: getDestinationInfo(),
-  id: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL),
   isFavorite: Boolean(getRandomInt(0, 1)),
   type: getTypeOfTheTrip(),
   offers: getOffers(),

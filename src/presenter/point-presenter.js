@@ -4,14 +4,16 @@ import { remove, render, RenderPosition, replace } from './../utils/render';
 
 export default class PointPresenter {
   #pointListContainer = null;
+  #changeData = null;
 
   #pointComponent = null;
   #pointEditComponent = null;
 
   #point = null;
 
-  constructor(pointListContainer) {
+  constructor(pointListContainer, changeData) {
     this.#pointListContainer = pointListContainer;
+    this.#changeData = changeData;
   }
 
   init = (point) => {
@@ -25,27 +27,29 @@ export default class PointPresenter {
 
     this.#pointComponent.setEventRolldownButton(this.#handleRolldownClick);
     this.#pointEditComponent.setEventRollupButton(this.#handleRollupButton);
-    this.#pointEditComponent.setEditSubmitHandler(this.#handleRollupButton);
+    this.#pointComponent.setEventFavoriteButton(this.#handleFavoriteClick);
+    this.#pointEditComponent.setEditSubmitHandler(this.#handleSubmitButton);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFOREEND);
+      return;
     }
 
-    // if (this.#pointListContainer.element.contains(prevPointComponent.element)) {
-    //   replace(this.#pointComponent, prevPointComponent);
-    // }
+    if (this.#pointListContainer.element.contains(prevPointComponent.element)) {
+      replace(this.#pointComponent, prevPointComponent);
+    }
 
-    // if (this.#pointListContainer.element.contains(prevPointEditComponent.element)) {
-    //   replace(this.#pointEditComponent, prevPointEditComponent);
-    // }
+    if (this.#pointListContainer.element.contains(prevPointEditComponent.element)) {
+      replace(this.#pointEditComponent, prevPointEditComponent);
+    }
 
-    // remove(prevPointComponent);
-    // remove(prevPointEditComponent);
+    remove(prevPointComponent);
+    remove(prevPointEditComponent);
 
-    // destroy = () => {
-    //   remove(this.#pointComponent);
-    //   remove(this.#pointEditComponent);
-    // };
+    destroy = () => {
+      remove(this.#pointComponent);
+      remove(this.#pointEditComponent);
+    };
   }
 
   #replacePointToForm = () => {
@@ -66,11 +70,20 @@ export default class PointPresenter {
     }
   }
 
+  #handleFavoriteClick = () => {
+    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+  }
+
   #handleRolldownClick = () => {
     this.#replacePointToForm();
   }
 
   #handleRollupButton = () => {
+    this.#replaceFormToPoint();
+  }
+
+  #handleSubmitButton = (point) => {
+    this.#changeData(point);
     this.#replaceFormToPoint();
   }
 }
