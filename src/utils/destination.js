@@ -2,6 +2,7 @@
 import { DESTINATION_INFO, MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL, TYPE_OF_TRIP, CITIES, OFFERS, MAXIMUM_RANDOM_BIG, MAXIMUM_PRICE_NUMBER, DESTINATION_COUNT } from '../mock/data.js';
 import dayjs from 'dayjs';
 import { getRandomInt, getRandomArrayElement } from './random.js';
+import { nanoid } from 'nanoid';
 
 
 //Функции возвращающие случайные элементы для склеивания описания
@@ -48,6 +49,7 @@ const generateDate = () => {
 };
 
 const createMockData = () => ({
+  id: nanoid(),
   basePrice: generatePrice(),
   dateFrom: generateDate(),
   dateTo: generateDate(),

@@ -64,4 +64,14 @@ export default class SitePointTemplate extends AbstractView {
     evt.preventDefault();
     this._callback.rolldownClick();
   }
+
+  setEventFavoriteButton = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#eventFavoriteButton);
+  }
+
+  #eventFavoriteButton = (evt) => {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
 }

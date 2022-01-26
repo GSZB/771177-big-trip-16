@@ -1,6 +1,6 @@
 import SiteEditTemplate from './../view/site-modify-view';
 import SitePointTemplate from './../view/site-point-template';
-import { render, RenderPosition, replace } from './../utils/render';
+import { remove, render, RenderPosition, replace } from './../utils/render';
 
 export default class PointPresenter {
   #pointListContainer = null;
@@ -17,6 +17,9 @@ export default class PointPresenter {
   init = (point) => {
     this.#point = point;
 
+    const prevPointComponent = this.#pointComponent;
+    const prevPointEditComponent = this.#pointEditComponent;
+
     this.#pointComponent = new SitePointTemplate(point);
     this.#pointEditComponent = new SiteEditTemplate(point);
 
@@ -24,7 +27,25 @@ export default class PointPresenter {
     this.#pointEditComponent.setEventRollupButton(this.#handleRollupButton);
     this.#pointEditComponent.setEditSubmitHandler(this.#handleRollupButton);
 
-    render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFOREEND);
+    if (prevPointComponent === null || prevPointEditComponent === null) {
+      render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFOREEND);
+    }
+
+    // if (this.#pointListContainer.element.contains(prevPointComponent.element)) {
+    //   replace(this.#pointComponent, prevPointComponent);
+    // }
+
+    // if (this.#pointListContainer.element.contains(prevPointEditComponent.element)) {
+    //   replace(this.#pointEditComponent, prevPointEditComponent);
+    // }
+
+    // remove(prevPointComponent);
+    // remove(prevPointEditComponent);
+
+    // destroy = () => {
+    //   remove(this.#pointComponent);
+    //   remove(this.#pointEditComponent);
+    // };
   }
 
   #replacePointToForm = () => {

@@ -178,7 +178,7 @@ export default class SiteCreateTemplate extends AbstractView {
 
   setEventCreateButton = (callback) => {
     this._callback.createClick = callback;
-    this.element.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#eventCreateButton);
+    document.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#eventCreateButton);
   }
 
   #eventCreateButton = (evt) => {
