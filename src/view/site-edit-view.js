@@ -2,12 +2,12 @@ import {TYPE_OF_TRIP, CITIES} from './../mock/data';
 import SmartView from './smart-view';
 import {randomDestinationData} from './../utils/destination';
 
-const createSiteCreateTemplate = (task) => {
+const createSiteEditTemplate = (task) => {
   const {destination, type, offers, currentOfferIds = [], basePrice} = task;
   const currentOffer = offers.find((offerData) => offerData.type.toLowerCase() === type.toLowerCase()) || {offers: []};
   const currentDestination = randomDestinationData.find((destinationData) => destinationData.name.toLowerCase() === destination.name.toLowerCase()) || {offers: []};
 
-  return  `<form class="event event--edit" action="#" method="post">
+  return `<li><form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -24,30 +24,31 @@ const createSiteCreateTemplate = (task) => {
     const lowerType = tripType.toLowerCase();
 
     return `
-                      <div class="event__type-item">
-                        <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}" ${lowerType === type.toLowerCase() ? 'checked' : ''}>
-                        <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${tripType}</label>
-                      </div>
-                    `;
+              <div class="event__type-item">
+                <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}" ${lowerType === type.toLowerCase() ? 'checked' : ''}>
+                <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${tripType}</label>
+              </div>
+            `;
   }).join('')}
 
-          </fieldset>
+        </fieldset>
       </div>
     </div>
 
     <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination?.name || ''}" list="destination-list-1">
+      <label class="event__label event__type-output" for="event-destination-1">${type}</label>
+      <input class="event__input  event__input--destination" id="event-destination-1" value="${destination?.name || ''}" name="event-destination" list="destination-list-1" />
       <datalist id="destination-list-1">
-      ${CITIES.map((city) => `<option value="${city}"></option>`).join('')}      </datalist>
+        ${CITIES.map((city) => `<option value="${city}"></option>`).join('')}
+      </datalist>
     </div>
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
       &mdash;
       <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -59,7 +60,10 @@ const createSiteCreateTemplate = (task) => {
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Cancel</button>
+    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>
   </header>
   <section class="event__details">
     <section class="event__section  event__section--offers">
@@ -77,47 +81,25 @@ const createSiteCreateTemplate = (task) => {
           </div>
           `).join('')}
       </div>
-
-      </div>
     </section>
 
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${currentDestination.text}</p>
-
-      <div class="event__photos-container">
-        <div class="event__photos-tape">
-          <img class="event__photo" src="${currentDestination.pictures[0].photoLink}" alt="Event photo">
-          <img class="event__photo" src="${currentDestination.pictures[0].photoLink}" alt="Event photo">
-          <img class="event__photo" src="${currentDestination.pictures[0].photoLink}" alt="Event photo">
-          <img class="event__photo" src="${currentDestination.pictures[0].photoLink}" alt="Event photo">
-          <img class="event__photo" src="${currentDestination.pictures[0].photoLink}" alt="Event photo">
-        </div>
-      </div>
     </section>
   </section>
-</form>`;
+</form></li>`;
 };
 
-export default class SiteCreateTemplate extends SmartView {
+export default class SiteEditTemplate extends SmartView {
   constructor(task) {
     super();
-    this._data = SiteCreateTemplate.parsePointToData(task);
+    this._data = SiteEditTemplate.parsePointToData(task);
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createSiteCreateTemplate(this._data);
-  }
-
-  setEventCreateButton = (callback) => {
-    this._callback.createClick = callback;
-    document.querySelector('.trip-main__event-add-btn').addEventListener('click', this.#eventCreateButton);
-  }
-
-  #eventCreateButton = (evt) => {
-    evt.preventDefault();
-    this._callback.createClick();
+    return createSiteEditTemplate(this._data);
   }
 
   setEditSubmitHandler = (callback) => {
@@ -128,6 +110,16 @@ export default class SiteCreateTemplate extends SmartView {
   #editSubmitHandler = (evt) => {
     evt.preventDefault();
     this._callback.editSubmit(this._data);
+  }
+
+  setEventRollupButton = (callback) => {
+    this._callback.rollupClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRollupButton);
+  }
+
+  #eventRollupButton = (evt) => {
+    evt.preventDefault();
+    this._callback.rollupClick();
   }
 
   #setInnerHandlers = () => {

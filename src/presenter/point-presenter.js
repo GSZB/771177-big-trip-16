@@ -1,4 +1,4 @@
-import SiteEditTemplate from './../view/site-modify-view';
+import SiteEditTemplate from '../view/site-edit-view';
 import SitePointTemplate from './../view/site-point-template';
 import { remove, render, RenderPosition, replace } from './../utils/render';
 

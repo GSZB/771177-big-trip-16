@@ -2,6 +2,7 @@ import AbstractView from './abstract-view';
 
 const createSitePointTemplate = (point) => {
   const {type, destination, offers, isFavorite} = point;
+  const currentOffer = offers.find((offerData) => offerData.type === type) || {offers: [{price: 100, title: 'Order Uber'}]};
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -23,12 +24,12 @@ const createSitePointTemplate = (point) => {
       <p class="event__duration">30M</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${offers[0].price}</span>
+      &euro;&nbsp;<span class="event__price-value">${currentOffer.offers[0].price}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">
       <li class="event__offer">
-        <span class="event__offer-title">${`${offers[0].title  }&nbsp;&plus;&euro;&nbsp;${  offers[0].price}`}</span>
+        <span class="event__offer-title">${`${currentOffer.offers[0].title  }&nbsp;&plus;&euro;&nbsp;${currentOffer.offers[0].price}`}</span>
         <!-- &plus;&euro;&nbsp;
         <span class="event__offer-price">20</span>-->
       </li>
@@ -61,20 +62,20 @@ export default class SitePointTemplate extends AbstractView {
 
   setEventRolldownButton = (callback) => {
     this._callback.rolldownClick = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRolldownButton);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickEventRolldownButton);
   }
 
-  #eventRolldownButton = (evt) => {
+  #clickEventRolldownButton = (evt) => {
     evt.preventDefault();
     this._callback.rolldownClick();
   }
 
   setEventFavoriteButton = (callback) => {
     this._callback.favoriteClick = callback;
-    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#eventFavoriteButton);
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#clickEventFavoriteButton);
   }
 
-  #eventFavoriteButton = (evt) => {
+  #clickEventFavoriteButton = (evt) => {
     evt.preventDefault();
     this._callback.favoriteClick();
   }
