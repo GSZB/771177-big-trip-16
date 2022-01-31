@@ -31,14 +31,37 @@ const getTypeOfTheTrip = () => (getRandomArrayElement(TYPE_OF_TRIP));
 const generatePrice = () => getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_PRICE_NUMBER);
 
 const getOffer = () => ({
-  id: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL),
+  id: nanoid(),
   title: getRandomArrayElement(OFFERS),
   price: generatePrice(),
 });
 
-const getOffers = () => [...new Set(Array.from({length: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL)}, () => getOffer()))];
 
+const getOffers = () => [...new Set(Array.from({length: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL)}, () => getOffer()))];
 //Dayjs
+
+const randomOffers = () => {
+  const randomOffersArray = [];
+  TYPE_OF_TRIP.forEach((trip) => {
+    randomOffersArray.push({
+      type: trip,
+      offers: getOffers()
+    });
+  });
+  return randomOffersArray;
+};
+
+const getRandomDestinationData = () => {
+  const randomDestinationArray = [];
+  CITIES.forEach((city) => {
+    randomDestinationArray.push({
+      name: city,
+      text: getDestinationDescription(),
+      pictures: getAmountOfGeneratedPhotos()
+    });
+  });
+  return randomDestinationArray;
+};
 
 const generateDate = () => {
   const maxDaysGap = 7;
@@ -54,12 +77,14 @@ const createMockData = () => ({
   dateFrom: generateDate(),
   dateTo: generateDate(),
   destination: getDestinationInfo(),
+  currentOfferIds: [],
   isFavorite: Boolean(getRandomInt(0, 1)),
   type: getTypeOfTheTrip(),
-  offers: getOffers(),
+  offers: randomOffers(),
 });
 
 const getDestinationData = () => Array.from({length: DESTINATION_COUNT}, createMockData);
 const destinationData = getDestinationData();
+const randomDestinationData = getRandomDestinationData();
 
-export { destinationData, getRandomCity, getAmountOfGeneratedPhotos };
+export { destinationData, getRandomCity, getAmountOfGeneratedPhotos, randomDestinationData };

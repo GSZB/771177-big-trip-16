@@ -1,11 +1,12 @@
-import SiteFilterView from './../view/site-sort-view';
+import SiteFilterView from './../view/site-filter-view';
 import TripListTemplate from './../view/trip-list-view';
 import PointPresenter from './../presenter/point-presenter';
-import { remove, render, RenderPosition, updateItem } from './../utils/render';
+import { render, RenderPosition, updateItem } from './../utils/render';
 import EmptyListTemplate from './../view/list-empty-view';
 import SiteCreateTemplate from './../view/site-create-view';
 import { destinationData } from './../utils/destination';
-
+import SiteSortView from './../view/site-sort-view';
+import { SortType } from '../mock/data';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -14,11 +15,14 @@ export default class TripPresenter {
   #tripListComponent = new TripListTemplate();
   #emptyListComponent = new EmptyListTemplate();
   #createPointComponent = new SiteCreateTemplate(destinationData[0]);
+  #siteSortComponent = new SiteSortView();
 
   #sitePointListElements = document.querySelector('.trip-events');
 
   #tripPoints = [];
   #pointPresenter = new Map();
+  #currentSortType = SortType.DEFAULT;
+  #sourcedTripPoints = [];
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -26,17 +30,17 @@ export default class TripPresenter {
 
   init = (tripPoints) => {
     this.#tripPoints = [...tripPoints];
+    this.#sourcedTripPoints = [...tripPoints];
 
     this.#createPointComponent.setEventCreateButton(this.#newPointClickHandler);
 
-    render(this.#sitePointListElements, this.#filterComponent, RenderPosition.BEFOREEND);
     render(this.#sitePointListElements, this.#tripListComponent, RenderPosition.BEFOREEND);
 
     if (this.#tripPoints.length === 0) {
       this.#renderNoPoints();
     }
 
-    this.#renderPoints();
+    this.#renderTrip();
   }
 
   #handleModeChange = () => {
@@ -45,7 +49,39 @@ export default class TripPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
+    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  }
+
+  // #sortPoints = (sortType) => {
+
+  //   switch (sortType) {
+  //     case SortType.TIME:
+  //       this.#tripPoints.sort(sortTaskUp);
+  //       break;
+  //     case SortType.PRICE:
+  //       this.#tripPoints.sort(sortTaskDown);
+  //       break;
+  //     default:
+  //       this.#tripPoints = [...this.#sourcedTripPoints];
+  //   }
+
+  //   this.#currentSortType = sortType;
+  // }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    // this.#sortPoints(sortType);
+    this.#clearPoints();
+    this.#renderPoints();
+  }
+
+  #renderPointSort = () => {
+    render(this.#sitePointListElements, this.#siteSortComponent, RenderPosition.AFTERBEGIN);
+    this.#siteSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderPoint = (point) => {
@@ -67,18 +103,12 @@ export default class TripPresenter {
     this.#pointPresenter.clear();
   }
 
-  // #renderNewPoint = () => {
-  //   render(this.#tripListComponent, this.#createPointComponent, RenderPosition.AFTERBEGIN);
-  // }
-
-  // #replaceTripToCreatePoint = () => {
-  //   replace(this.#renderNewPoint, this.#renderPoints);
-  // }
-
   #newPointClickHandler = () => {
-    // this.#replaceTripToCreatePoint();
-    remove(this.#tripListComponent);
-    render(this.#sitePointListElements, this.#createPointComponent, RenderPosition.BEFOREEND);
+    render(this.#tripListComponent, this.#createPointComponent, RenderPosition.AFTERBEGIN);
+  }
 
+  #renderTrip = () => {
+    this.#renderPointSort();
+    this.#renderPoints();
   }
 }
