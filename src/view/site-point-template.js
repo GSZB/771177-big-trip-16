@@ -1,7 +1,7 @@
 import AbstractView from './abstract-view';
 
 const createSitePointTemplate = (point) => {
-  const {type, destination, offers, isFavorite} = point;
+  const {type, destination, offers, isFavorite, dateFrom} = point;
   const currentOffer = offers.find((offerData) => offerData.type === type) || {offers: [{price: 100, title: 'Order Uber'}]};
 
   const favoriteClassName = isFavorite
@@ -10,7 +10,7 @@ const createSitePointTemplate = (point) => {
 
   return `<li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="2019-03-18">MAR 18</time>
+    <time class="event__date" datetime="2019-03-18">${dateFrom}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/taxi.png" alt="Event type icon">
     </div>
@@ -24,7 +24,7 @@ const createSitePointTemplate = (point) => {
       <p class="event__duration">30M</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${currentOffer.offers[0].price}</span>
+      &euro;&nbsp;<span class="event__price-value">${point.basePrice}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     <ul class="event__selected-offers">

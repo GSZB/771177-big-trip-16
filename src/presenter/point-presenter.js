@@ -61,7 +61,7 @@ export default class PointPresenter {
     }
   }
 
-  #destroy = () => {
+  destroy = () => {
     remove(this.#pointComponent);
     remove(this.#pointEditComponent);
   };

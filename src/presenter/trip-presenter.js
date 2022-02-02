@@ -1,7 +1,7 @@
 import SiteFilterView from './../view/site-filter-view';
 import TripListTemplate from './../view/trip-list-view';
 import PointPresenter from './../presenter/point-presenter';
-import { render, RenderPosition, updateItem } from './../utils/render';
+import { render, RenderPosition } from './../utils/render';
 import EmptyListTemplate from './../view/list-empty-view';
 import SiteCreateTemplate from './../view/site-create-view';
 import { destinationData } from './../utils/destination';
@@ -10,6 +10,7 @@ import { SortType } from '../mock/data';
 
 export default class TripPresenter {
   #tripContainer = null;
+  #pointsModel = null;
 
   #filterComponent = new SiteFilterView();
   #tripListComponent = new TripListTemplate();
@@ -19,62 +20,70 @@ export default class TripPresenter {
 
   #sitePointListElements = document.querySelector('.trip-events');
 
-  #tripPoints = [];
   #pointPresenter = new Map();
   #currentSortType = SortType.DEFAULT;
-  #sourcedTripPoints = [];
 
-  constructor(tripContainer) {
+  constructor(tripContainer, pointsModel) {
     this.#tripContainer = tripContainer;
+    this.#pointsModel = pointsModel;
+
+    // this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
-  init = (tripPoints) => {
-    this.#tripPoints = [...tripPoints];
-    this.#sourcedTripPoints = [...tripPoints];
+  get points() {
+    switch (this.#currentSortType) {
+      case SortType.TIME:
+        return this.#pointsModel.points.sort((a, b) => a.dateFrom - b.dateFrom);
+      case SortType.PRICE:
+        return this.#pointsModel.points.sort((a, b) => b.basePrice - a.basePrice);
+    }
+
+    return this.#pointsModel.points;
+  }
+
+  init = () => {
 
     this.#createPointComponent.setEventCreateButton(this.#newPointClickHandler);
 
     render(this.#sitePointListElements, this.#tripListComponent, RenderPosition.BEFOREEND);
 
-    if (this.#tripPoints.length === 0) {
+    if (this.#pointsModel.length === 0) {
       this.#renderNoPoints();
     }
 
     this.#renderTrip();
   }
 
+  // #handleViewAction = (actionType, updateType, update) => {
+  //   console.log(actionType, updateType, update);
+  //   // Здесь будем вызывать обновление модели.
+  //   // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+  //   // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+  //   // update - обновленные данные
+  // }
+
+  // #handleModelEvent = (updateType, data) => {
+  //   console.log(updateType, data);
+  //   // В зависимости от типа изменений решаем, что делать:
+  //   // - обновить часть списка (например, когда поменялось описание)
+  //   // - обновить список (например, когда задача ушла в архив)
+  //   // - обновить всю доску (например, при переключении фильтра)
+  // }
+
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
   #handlePointChange = (updatedPoint) => {
-    this.#tripPoints = updateItem(this.#tripPoints, updatedPoint);
-    this.#sourcedTripPoints = updateItem(this.#sourcedTripPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
-
-  // #sortPoints = (sortType) => {
-
-  //   switch (sortType) {
-  //     case SortType.TIME:
-  //       this.#tripPoints.sort(sortTaskUp);
-  //       break;
-  //     case SortType.PRICE:
-  //       this.#tripPoints.sort(sortTaskDown);
-  //       break;
-  //     default:
-  //       this.#tripPoints = [...this.#sourcedTripPoints];
-  //   }
-
-  //   this.#currentSortType = sortType;
-  // }
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
 
-    // this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPoints();
     this.#renderPoints();
   }
@@ -91,7 +100,7 @@ export default class TripPresenter {
   }
 
   #renderPoints = () => {
-    this.#tripPoints.forEach((tripPoint) => this.#renderPoint(tripPoint));
+    this.points.forEach((point) => this.#renderPoint(point));
   }
 
   #renderNoPoints = () => {

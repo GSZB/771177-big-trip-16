@@ -38,7 +38,6 @@ const getOffer = () => ({
 
 
 const getOffers = () => [...new Set(Array.from({length: getRandomInt(MINIMAL_RANDOM_NUMBER, MAXIMUM_RANDOM_SMALL)}, () => getOffer()))];
-//Dayjs
 
 const randomOffers = () => {
   const randomOffersArray = [];
@@ -68,7 +67,7 @@ const generateDate = () => {
 
   const daysGap = getRandomInt(MINIMAL_RANDOM_NUMBER, maxDaysGap);
 
-  return dayjs().add(daysGap, 'day').toDate();
+  return dayjs().add(daysGap, 'day').format('MMM DD');
 };
 
 const createMockData = () => ({
@@ -88,3 +87,4 @@ const destinationData = getDestinationData();
 const randomDestinationData = getRandomDestinationData();
 
 export { destinationData, getRandomCity, getAmountOfGeneratedPhotos, randomDestinationData };
+

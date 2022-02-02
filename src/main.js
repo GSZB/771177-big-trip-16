@@ -1,10 +1,11 @@
-import SiteMenuControlView  from './view/site-menu-controls-view.js';
-import SiteMenuInfoView from './view/site-menu-info-view.js';
-import HeaderFilterView from './view/site-filter-view.js';
+import SiteMenuControlView  from './view/site-menu-controls-view';
+import SiteMenuInfoView from './view/site-menu-info-view';
+import HeaderFilterView from './view/site-filter-view';
 import TripListTemplate from './view/trip-list-view';
-import { render, RenderPosition } from './utils/render.js';
-import { destinationData } from './utils/destination.js';
+import { render, RenderPosition } from './utils/render';
+import { destinationData } from './utils/destination';
 import TripPresenter from './presenter/trip-presenter';
+import PointModel from './model/points-model';
 
 const SiteMenuInfoComponent = new SiteMenuInfoView();
 const SiteMenuControlComponent = new SiteMenuControlView();
@@ -18,7 +19,10 @@ render(siteControlNavigationElement, SiteMenuControlComponent, RenderPosition.BE
 const siteControlFilterElement = siteHeaderContainerMenu.querySelector('.trip-controls__filters');
 render(siteControlFilterElement, HeaderFilterComponent, RenderPosition.BEFOREEND);
 
+const pointModel = new PointModel();
+pointModel.points = destinationData;
 
-const tripPresenter = new TripPresenter(TripListComponent);
-tripPresenter.init(destinationData);
+
+const tripPresenter = new TripPresenter(TripListComponent, pointModel);
+tripPresenter.init();
 
