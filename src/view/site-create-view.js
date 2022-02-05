@@ -186,8 +186,4 @@ export default class SiteCreateTemplate extends SmartView {
   static parsePointToData = (point) => ({...point,
     type: point.type
   })
-
-  // static parseDataToPoint = (data) => {
-
-  // }
 }

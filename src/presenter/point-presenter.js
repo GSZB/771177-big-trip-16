@@ -38,6 +38,7 @@ export default class PointPresenter {
     this.#pointEditComponent.setEventRollupButton(this.#handleRollupButton);
     this.#pointComponent.setEventFavoriteButton(this.#handleFavoriteClick);
     this.#pointEditComponent.setEditSubmitHandler(this.#handleSubmitButton);
+    this.#pointEditComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointListContainer, this.#pointComponent, RenderPosition.BEFOREEND);
@@ -90,9 +91,17 @@ export default class PointPresenter {
 
   #handleFavoriteClick = () => {
     this.#changeData(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
+  }
+
+  #handleDeleteClick = (point) => {
+    this.#changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
     );
   }
 
@@ -106,7 +115,7 @@ export default class PointPresenter {
 
   #handleSubmitButton = (point) => {
     this.#changeData(
-      UserAction.UPDATE_TASK,
+      UserAction.UPDATE_POINT,
       UpdateType.MINOR,
       point
     );

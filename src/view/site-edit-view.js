@@ -117,9 +117,19 @@ export default class SiteEditTemplate extends SmartView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#eventRollupButton);
   }
 
+  setDeleteClickHandler = (callback) => {
+    this._callback.deleteClick = callback;
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#formDeleteClickHandler);
+  }
+
   #eventRollupButton = (evt) => {
     evt.preventDefault();
     this._callback.rollupClick();
+  }
+
+  #formDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteClick(SiteEditTemplate.parseDataToPoint(this._data));
   }
 
   #setInnerHandlers = () => {
@@ -133,8 +143,10 @@ export default class SiteEditTemplate extends SmartView {
   }
 
   restoreHandlers = () => {
+    debugger;
     this.#setInnerHandlers();
     this.setEventRollupButton(this._callback.rollupClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   #changeDestinationCity = (evt) => {
@@ -181,7 +193,9 @@ export default class SiteEditTemplate extends SmartView {
     type: point.type
   })
 
-  // static parseDataToPoint = (data) => {
+  static parseDataToPoint = (data) => {
+    const point = {...data};
 
-  // }
+
+  }
 }

@@ -8,7 +8,6 @@ import { destinationData } from './../utils/destination';
 import SiteSortView from './../view/site-sort-view';
 import { SortType } from '../mock/data';
 import { UserAction, UpdateType } from '../mock/data';
-
 export default class TripPresenter {
   #tripContainer = null;
   #pointsModel = null;
@@ -18,6 +17,7 @@ export default class TripPresenter {
   #emptyListComponent = new EmptyListTemplate();
   #createPointComponent = new SiteCreateTemplate(destinationData[0]);
   #siteSortComponent = null;
+
 
   #sitePointListElements = document.querySelector('.trip-events');
 
