@@ -2,8 +2,8 @@ import {TYPE_OF_TRIP, CITIES} from './../mock/data';
 import SmartView from './smart-view';
 import {randomDestinationData} from './../utils/destination';
 
-const createSiteEditTemplate = (task) => {
-  const {destination, type, offers, currentOfferIds = [], basePrice} = task;
+const createSiteEditTemplate = (point) => {
+  const {destination, type, offers, currentOfferIds = [], basePrice} = point;
   const currentOffer = offers.find((offerData) => offerData.type.toLowerCase() === type.toLowerCase()) || {offers: []};
   const currentDestination = randomDestinationData.find((destinationData) => destinationData.name.toLowerCase() === destination.name.toLowerCase()) || {offers: []};
 
@@ -92,9 +92,9 @@ const createSiteEditTemplate = (task) => {
 };
 
 export default class SiteEditTemplate extends SmartView {
-  constructor(task) {
+  constructor(point) {
     super();
-    this._data = SiteEditTemplate.parsePointToData(task);
+    this._data = SiteEditTemplate.parsePointToData(point);
     this.#setInnerHandlers();
   }
 

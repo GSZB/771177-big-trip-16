@@ -1,6 +1,7 @@
 import SiteEditTemplate from '../view/site-edit-view';
 import SitePointTemplate from './../view/site-point-template';
 import { remove, render, RenderPosition, replace } from './../utils/render';
+import { UpdateType, UserAction } from './../mock/data';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -88,7 +89,11 @@ export default class PointPresenter {
   }
 
   #handleFavoriteClick = () => {
-    this.#changeData({...this.#point, isFavorite: !this.#point.isFavorite});
+    this.#changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      {...this.#point, isFavorite: !this.#point.isFavorite}
+    );
   }
 
   #handleRolldownClick = () => {
@@ -100,7 +105,11 @@ export default class PointPresenter {
   }
 
   #handleSubmitButton = (point) => {
-    this.#changeData(point);
+    this.#changeData(
+      UserAction.UPDATE_TASK,
+      UpdateType.MINOR,
+      point
+    );
     this.#replaceFormToPoint();
   }
 }

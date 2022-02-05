@@ -7,6 +7,7 @@ import SiteCreateTemplate from './../view/site-create-view';
 import { destinationData } from './../utils/destination';
 import SiteSortView from './../view/site-sort-view';
 import { SortType } from '../mock/data';
+import { UserAction, UpdateType } from '../mock/data';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -16,7 +17,7 @@ export default class TripPresenter {
   #tripListComponent = new TripListTemplate();
   #emptyListComponent = new EmptyListTemplate();
   #createPointComponent = new SiteCreateTemplate(destinationData[0]);
-  #siteSortComponent = new SiteSortView();
+  #siteSortComponent = null;
 
   #sitePointListElements = document.querySelector('.trip-events');
 
@@ -27,7 +28,7 @@ export default class TripPresenter {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
 
-    // this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#pointsModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
@@ -47,35 +48,39 @@ export default class TripPresenter {
 
     render(this.#sitePointListElements, this.#tripListComponent, RenderPosition.BEFOREEND);
 
-    if (this.#pointsModel.length === 0) {
-      this.#renderNoPoints();
-    }
-
     this.#renderTrip();
   }
 
-  // #handleViewAction = (actionType, updateType, update) => {
-  //   console.log(actionType, updateType, update);
-  //   // Здесь будем вызывать обновление модели.
-  //   // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-  //   // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-  //   // update - обновленные данные
-  // }
+  #handleViewAction = (actionType, updateType, update) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this.#pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#pointsModel.deletePoint(updateType, update);
+        break;
+    }
+  }
 
-  // #handleModelEvent = (updateType, data) => {
-  //   console.log(updateType, data);
-  //   // В зависимости от типа изменений решаем, что делать:
-  //   // - обновить часть списка (например, когда поменялось описание)
-  //   // - обновить список (например, когда задача ушла в архив)
-  //   // - обновить всю доску (например, при переключении фильтра)
-  // }
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#pointPresenter.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearPoints();
+        this.#renderPoints();
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
+  }
 
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
-  }
-
-  #handlePointChange = (updatedPoint) => {
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
   #handleSortTypeChange = (sortType) => {
@@ -89,17 +94,23 @@ export default class TripPresenter {
   }
 
   #renderPointSort = () => {
-    render(this.#sitePointListElements, this.#siteSortComponent, RenderPosition.AFTERBEGIN);
+    this.#siteSortComponent = new SiteSortView(this.#currentSortType);
     this.#siteSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+
+    render(this.#tripListComponent, this.#siteSortComponent, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handlePointChange, this.#handleModeChange);
+    const pointPresenter = new PointPresenter(this.#tripListComponent, this.#handleViewAction, this.#handleModeChange);
     pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #renderPoints = () => {
+    if (this.#pointsModel.length === 0) {
+      this.#renderNoPoints();
+    }
+
     this.points.forEach((point) => this.#renderPoint(point));
   }
 
@@ -111,6 +122,7 @@ export default class TripPresenter {
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
   }
+
 
   #newPointClickHandler = () => {
     render(this.#tripListComponent, this.#createPointComponent, RenderPosition.AFTERBEGIN);

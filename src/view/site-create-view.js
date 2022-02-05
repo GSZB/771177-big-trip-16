@@ -2,8 +2,8 @@ import {TYPE_OF_TRIP, CITIES} from './../mock/data';
 import SmartView from './smart-view';
 import {randomDestinationData} from './../utils/destination';
 
-const createSiteCreateTemplate = (task) => {
-  const {destination, type, offers, currentOfferIds = [], basePrice} = task;
+const createSiteCreateTemplate = (point) => {
+  const {destination, type, offers, currentOfferIds = [], basePrice} = point;
   const currentOffer = offers.find((offerData) => offerData.type.toLowerCase() === type.toLowerCase()) || {offers: []};
   const currentDestination = randomDestinationData.find((destinationData) => destinationData.name.toLowerCase() === destination.name.toLowerCase()) || {offers: []};
 
@@ -23,12 +23,10 @@ const createSiteCreateTemplate = (task) => {
           ${TYPE_OF_TRIP.map((tripType) => {
     const lowerType = tripType.toLowerCase();
 
-    return `
-                      <div class="event__type-item">
-                        <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}" ${lowerType === type.toLowerCase() ? 'checked' : ''}>
-                        <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${tripType}</label>
-                      </div>
-                    `;
+    return `<div class="event__type-item">
+              <input id="event-type-${lowerType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerType}" ${lowerType === type.toLowerCase() ? 'checked' : ''}>
+              <label class="event__type-label  event__type-label--${lowerType}" for="event-type-${lowerType}-1">${tripType}</label>
+            </div>`;
   }).join('')}
 
           </fieldset>
@@ -100,9 +98,9 @@ const createSiteCreateTemplate = (task) => {
 };
 
 export default class SiteCreateTemplate extends SmartView {
-  constructor(task) {
+  constructor(point) {
     super();
-    this._data = SiteCreateTemplate.parsePointToData(task);
+    this._data = SiteCreateTemplate.parsePointToData(point);
     this.#setInnerHandlers();
   }
 
