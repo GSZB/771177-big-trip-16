@@ -6,6 +6,7 @@ import { render, RenderPosition } from './utils/render';
 import { destinationData } from './utils/destination';
 import TripPresenter from './presenter/trip-presenter';
 import PointModel from './model/points-model';
+import FilterModel from './model/filter-model';
 
 const SiteMenuInfoComponent = new SiteMenuInfoView();
 const SiteMenuControlComponent = new SiteMenuControlView();
@@ -18,6 +19,8 @@ const siteControlNavigationElement = siteHeaderContainerMenu.querySelector('.tri
 render(siteControlNavigationElement, SiteMenuControlComponent, RenderPosition.BEFOREEND);
 const siteControlFilterElement = siteHeaderContainerMenu.querySelector('.trip-controls__filters');
 render(siteControlFilterElement, HeaderFilterComponent, RenderPosition.BEFOREEND);
+
+const filterModel = new FilterModel();
 
 const pointModel = new PointModel();
 pointModel.points = destinationData;

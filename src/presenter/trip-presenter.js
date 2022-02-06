@@ -107,7 +107,7 @@ export default class TripPresenter {
   }
 
   #renderPoints = () => {
-    if (this.#pointsModel.length === 0) {
+    if (!this.#pointsModel.points.length === 0) {
       this.#renderNoPoints();
     }
 

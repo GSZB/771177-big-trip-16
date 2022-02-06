@@ -129,7 +129,7 @@ export default class SiteEditTemplate extends SmartView {
 
   #formDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    this._callback.deleteClick(SiteEditTemplate.parseDataToPoint(this._data));
+    this._callback.deleteClick();
   }
 
   #setInnerHandlers = () => {
@@ -143,7 +143,6 @@ export default class SiteEditTemplate extends SmartView {
   }
 
   restoreHandlers = () => {
-    debugger;
     this.#setInnerHandlers();
     this.setEventRollupButton(this._callback.rollupClick);
     this.setDeleteClickHandler(this._callback.deleteClick);
@@ -193,9 +192,9 @@ export default class SiteEditTemplate extends SmartView {
     type: point.type
   })
 
-  static parseDataToPoint = (data) => {
-    const point = {...data};
+  // static parseDataToPoint = (data) => {
+  //   const point = {...data};
 
 
-  }
+  // }
 }
